@@ -1,0 +1,12 @@
+# Dependencies for Anime Recommendation System
+# Tested and verified in Google Colab (Python 3.11, June 2025)
+# These versions work reliably in Colab; local environments may require adjustments
+
+pandas==2.2.2
+numpy==2.0.2
+tensorflow==2.18.0
+re==2.2.1
+scipy==1.15.3
+scikit-learn==1.6.1
+sentence_transformers==4.1.0
+einops==0.8.1
