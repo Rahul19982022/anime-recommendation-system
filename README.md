@@ -125,7 +125,7 @@ A `requirements.txt` is also provided for running the project locally with the s
 ---
 
 ## 🙌 Acknowledgements
-- Content embeddings are generated using the large language model [`Alibaba-NLP/gte-large-en-v1.5`](https://huggingface.co/Alibaba-NLP/gte-large-en-v1.5) from Hugging Face.
+- Content embeddings are generated using the model [`Alibaba-NLP/gte-large-en-v1.5`](https://huggingface.co/Alibaba-NLP/gte-large-en-v1.5) from Hugging Face.
 
 - Dataset: [Kaggle Anime Recommendation Database](https://www.kaggle.com/datasets/hernan4444/anime-recommendation-database-2020)  
 - Libraries: `tensorflow`, `pandas`, `numpy`, `scikit-learn`, `sentence-transformers`
