@@ -24,6 +24,10 @@ try:
     with open(os.path.join(DATA_PATH, 'genres_list.pkl'), 'rb') as f:
         genres_list = pickle.load(f)
 
+    # --- NEW: Load Relations Dictionary ---
+    with open(os.path.join(DATA_PATH, 'anime_relations_expanded.pkl'), 'rb') as f:
+        anime_relations = pickle.load(f)
+
     # Filter content_df
     content_df = content_df[content_df['MAL_ID'].isin(anime['MAL_ID'].unique())]
 
@@ -38,14 +42,11 @@ try:
         anime_encoded2anime = pickle.load(f)
     encoded_dictionary = {'anime2anime_encoded': anime2anime_encoded, 'anime_encoded2anime': anime_encoded2anime}
 
-except FileNotFoundError as e:
+except Exception as e:
     print(f"Error loading files: {e}")
     anime = pd.DataFrame()
     anime_weights = None
-except Exception as e:
-    print(f"An error occurred: {e}")
-    anime = pd.DataFrame()
-    anime_weights = None
+    anime_relations = {}
 
 # --- 2. CORE LOGIC FUNCTIONS ---
 def get_anime_id_from_name(name, anime_df):
@@ -55,7 +56,6 @@ def get_anime_id_from_name(name, anime_df):
         except: return None
 
 def get_anime_details(name, anime_df, anime_agg_df):
-    """Fetches the full details for a single anime by name."""
     anime_id = get_anime_id_from_name(name, anime_df)
     if anime_id is None: return None
     anime_info = anime_df[anime_df['MAL_ID'] == anime_id].copy()
@@ -98,6 +98,13 @@ def filter_recommendations(recommendations_df, anime_df, anime_agg_df, **filters
         rec_with_info = rec_with_info.dropna(subset=['anime_avg_rating'])
         rec_with_info = rec_with_info[rec_with_info['anime_avg_rating'] >= filters['min_anime_rating']]
 
+    if filters.get('popularity_range'):
+        pop_range = filters['popularity_range']
+        rec_with_info = rec_with_info[
+            (rec_with_info['Popularity_adjusted'] >= pop_range[0]) &
+            (rec_with_info['Popularity_adjusted'] <= pop_range[1])
+        ]
+
     return rec_with_info.reset_index(drop=True)
 
 
@@ -137,8 +144,6 @@ def rec_based_on_genre_similarity(name, anime_df, anime_genre_mlb_df):
         anime_genre_array = anime_genre_mlb_df.loc[:, genre_columns].values
 
         similarity_scores = np.dot(anime_genre_array, selected_anime_genre_vector).reshape(-1)
-
-        # This is where we use 'norm'
         norm_factor = norm(anime_genre_array, axis=1) * norm(selected_anime_genre_vector)
         norm_factor = np.where(norm_factor == 0, 1e-6, norm_factor)
         similarity_scores = similarity_scores / norm_factor
@@ -163,7 +168,7 @@ def get_divided_opinion_animes(anime_df, ids_list):
     return divided_df
 
 # --- 5. MAIN ORCHESTRATOR FUNCTIONS ---
-def get_recommendations_by_name(name, rec_type, top_n=10, **filters):
+def get_recommendations_by_name(name, rec_type, top_n=10, remove_related=False, **filters):
     if anime.empty or anime_weights is None: return pd.DataFrame()
 
     results_df = None
@@ -176,13 +181,28 @@ def get_recommendations_by_name(name, rec_type, top_n=10, **filters):
 
     if results_df is None or results_df.empty: return None
 
+    # --- NEW: Filter out related anime if requested ---
+    if remove_related:
+        input_id = get_anime_id_from_name(name, anime)
+        # Check if we have relations data for this anime
+        if input_id in anime_relations:
+            related_ids = anime_relations[input_id]
+            # Ensure proper column name for filtering
+            if 'MAL_ID' not in results_df.columns and 'anime_id' in results_df.columns:
+                 results_df.rename(columns={'anime_id': 'MAL_ID'}, inplace=True)
+
+            # Remove any recommendation whose ID is in the related list
+            if 'MAL_ID' in results_df.columns:
+                results_df = results_df[~results_df['MAL_ID'].isin(related_ids)]
+    # ------------------------------------------------
+
     filtered_results = filter_recommendations(results_df, anime, anime_agg, **filters)
 
-    return filtered_results.head(top_n)[['Name', 'Genres_edited', 'Type', 'Origin_year', 'anime_avg_rating', 'image_url', 'synopsis']]
+    return filtered_results.head(top_n)[['Name', 'Genres_edited', 'Type', 'Origin_year', 'anime_avg_rating', 'Popularity_adjusted', 'image_url', 'synopsis']]
 
 def get_discover_animes(top_n=20):
     if anime.empty: return pd.DataFrame()
     divided_df = get_divided_opinion_animes(anime, divided_opinion_ids)
     divided_df = divided_df.merge(anime_agg[['anime_id', 'anime_avg_rating']], left_on='MAL_ID', right_on='anime_id', how='left')
     if top_n > len(divided_df): top_n = len(divided_df)
-    return divided_df.sample(n=top_n)[['Name', 'Genres_edited', 'Type', 'Origin_year', 'anime_avg_rating', 'image_url', 'synopsis']]
+    return divided_df.sample(n=top_n)[['Name', 'Genres_edited', 'Type', 'Origin_year', 'anime_avg_rating', 'Popularity_adjusted', 'image_url', 'synopsis']]
