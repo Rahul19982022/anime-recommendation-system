@@ -1,8 +1,8 @@
 # 🎌 Anime Recommendation System
 
-This project implements **10+ anime recommendation strategies** spanning collaborative filtering, content-based methods, genre analysis, and behavioral insights. 
-For public demonstration, a Streamlit app showcases a subset of these techniques. 
-For visualization or brief explanation of all the strategies implemented, please refer to the [📊 Presentations](#-presentations) section below. 
+This project implements **10+ anime recommendation strategies** spanning collaborative filtering, content-based methods, genre analysis, and behavioral insights.  
+For public demonstration, a Streamlit app showcases a subset of these techniques.  
+For visualization or brief explanation of all the strategies implemented, please refer to the [📊 Presentations](#-presentations) section below.
 
 ---
 
@@ -10,7 +10,7 @@ For visualization or brief explanation of all the strategies implemented, please
 
 This repository contains **two complementary components**:
 
-1. **Full Recommendation System (Research & Experiments)**  (recommendation_features.ipynb file) 
+1. **Full Recommendation System (Research & Experiments)**  (recommendation_features.ipynb file)  
    Implemented in Google Colab, this version explores **10+ recommendation strategies**, consisting both of user-dependent and user-independent strategies to recommend anime.
 
 2. **Streamlit Demo App (Public Deployment)**  
