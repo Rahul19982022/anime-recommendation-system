@@ -1,34 +1,88 @@
 # 🎌 Anime Recommendation System
 
-A full-featured anime recommendation system combining collaborative filtering, genre-based scoring, content similarity, and user behavior insights to deliver personalized and varied anime suggestions.
+This project implements **10+ anime recommendation strategies** spanning collaborative filtering, content-based methods, genre analysis, and behavioral insights.
+For public demonstration, a Streamlit app showcases a subset of these techniques.
+For visualization or brief explanation of all the strategies implemented, please refer to the [📊 Presentations](#-presentations) section below.
 
 ---
 
-## 📂 Folder Structure
+## 🔍 Project Overview
+
+This repository contains **two complementary components**:
+
+1. **Full Recommendation System (Research & Experiments)**  (recommendation_features.ipynb file)
+   Implemented in Google Colab, this version explores **10+ recommendation strategies**, consisting both of user-dependent and user-independent strategies to recommend anime.
+
+2. **Streamlit Demo App (Public Deployment)**  
+   A lightweight, publicly accessible demo showcasing **4 user-independent recommendation features**, deployed on Streamlit Cloud.
+
+This separation ensures both **depth (research)** and **accessibility (public demo)**.
+
+---
+
+## 🚀 Streamlit Demo App
+
+🔗 **Live App:** https://anime-recommender-rahul.streamlit.app/
+
+The Streamlit app demonstrates recommendation techniques that **do not depend on private user data**, making it suitable for public sharing.
+
+### ✨ Features in the Demo
+- Anime–Anime similarity using embeddings
+- Content / plot similarity using plot embeddings  
+- Hybrid: Model + Genre Similarity Recommendations
+- Divisive/Controversial Anime Recommendations
+  
+### 🛠️ App Architecture
+
+```
+streamlit_app/
+│── app.py
+│── recommender.py
+│── requirements.txt
+
+app_data/
+│── *.pkl / *.csv
+```
+
+---
+
+## 🏗️ Deployable App Builder
+
+The notebook **`Deployable_App_Builder.ipynb`** bridges the research system and the deployable app.
+
+It is used to:
+- Generate lightweight, preprocessed datasets required for the Streamlit app to function correctly, saved in the app_data folder
+- Build `app.py` and `recommender.py` for the Streamlit app’s user interface and backend recommendation logic
+
+---
+
+## 📂 Repository Structure
 
 ```
 anime-recommendation-system/
 │
-├── recommendation_features.ipynb               # Main notebook for generating recommendations
-├── archives/                                   # Support notebooks (optional)
-│   ├── 1_data_preprocessing.ipynb              # Clean and prepare raw Kaggle data
-│   ├── 2_collaborative_filtering_model.ipynb   # Train the deep learning based Collaborative filtering model
-│   └── 3_create_plot_embeddings.ipynb          # Generate anime plot embeddings using Sentence transformer model
+├── recommendation_features.ipynb
+├── Deployable_App_Builder.ipynb
+│
+├── archives/
+│   ├── 1_data_preprocessing.ipynb
+│   ├── 2_collaborative_filtering_model.ipynb
+│   └── 3_create_plot_embeddings.ipynb
 │
 ├── datasets/
-│   ├── created_datasets/              # Preprocessed datasets (download from Drive)
-│   └── kaggle_dataset/                # Raw dataset from Kaggle (optional)
+│   ├── created_datasets/
+│   └── kaggle_dataset/
 │
-├── model/                             # Trained model file (download from Drive)
-├── requirements.txt                   # Dependency list
+├── model/
+├── app_data/
+├── streamlit_app/
+├── requirements.txt
 └── README.md
 ```
----
-
 
 ---
 
-## 🚀 Features Implemented
+## 🚀 Features Implemented (Full System)
 
 Below are the key recommendation strategies implemented in this project:
 
@@ -47,9 +101,7 @@ Below are the key recommendation strategies implemented in this project:
 📌 *For visualization or brief explanation of each feature, refer to the [📊 Presentations](#-presentations) section below.*
 
 
-## ⚙️ Setup Instructions
-
-### 🟢 For Google Colab (Recommended)
+## ⚙️ Setup Instructions (Google Colab)
 
 1. First, open a Colab notebook and mount the drive using following command in a cell.
 
@@ -61,7 +113,8 @@ drive.mount('/content/drive')
    You need to **change the save path according to your Google Drive** i.e. where you will save the project.  
  
 ```python
-import os  
+import os
+#replace the save_path variable with your drive path 
 save_path = '/content/drive/MyDrive/'
 os.chdir(save_path)
 !git clone https://github.com/Rahul19982022/anime-recommendation-system.git
@@ -75,8 +128,6 @@ This will create `anime_recommendation_system` folder. Close the notebook and op
 3. Run `recommendation_features.ipynb`.  
    The `os.chdir(proj_path)` command is used inside the notebook to navigate to the project folder.  
    You only need to **change the folder path according to your Google Drive** location of the project.
-
-All dependencies will be installed automatically using `!pip install` inside the notebook.
 
 ---
 
@@ -99,9 +150,7 @@ Download the required files from the links below and place them in the correspon
 
 This project was developed and tested in **Google Colab (Python 3.11)**.
 
-Installations are handled inside each notebook using `!pip install`, so **Colab users do not need to install anything manually**.
-
-A `requirements.txt` is also provided for running the project locally with the same package versions.
+A `requirements.txt` is provided as reference for the packages used, and mentioned versions if required 
 
 ---
 
@@ -126,6 +175,5 @@ A `requirements.txt` is also provided for running the project locally with the s
 
 ## 🙌 Acknowledgements
 - Content embeddings are generated using the model [`Alibaba-NLP/gte-large-en-v1.5`](https://huggingface.co/Alibaba-NLP/gte-large-en-v1.5) from Hugging Face.
-
 - Dataset: [Kaggle Anime Recommendation Database](https://www.kaggle.com/datasets/hernan4444/anime-recommendation-database-2020)  
 - Libraries: `tensorflow`, `pandas`, `numpy`, `scikit-learn`, `sentence-transformers`
