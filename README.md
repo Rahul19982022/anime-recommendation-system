@@ -10,7 +10,7 @@ For visualization or brief explanation of all the strategies implemented, please
 
 This repository contains **two complementary components**:
 
-1. **Full Recommendation System (Research & Experiments)**  (`recommendation_features.ipynb file`)  
+1. **Full Recommendation System (Research & Experiments)**  (`recommendation_features.ipynb`)  
    Implemented in Google Colab, this version explores **10+ recommendation strategies**, consisting both of user-dependent and user-independent strategies to recommend anime.
 
 2. **Streamlit Demo App (Public Deployment)**  
